@@ -148,3 +148,18 @@ skill_extractor = SkillExtractor(model="new-model-name")
 1. Generates embeddings for ESCO skills and ISCO occupations.
 2. Creates embeddings for the extracted skills.
 3. Compares the embeddings of ESCO skills or ISCO occupations with those of the extracted skills using cosine similarity and matches them if the similarity is above a certain threshold.
+
+## Related Publication
+
+```
+Dimitrios Christos Kavargyris, Konstantinos Georgiou, Eleanna Papaioannou, Konstantinos Petrakis, Nikolaos Mittas, Lefteris Angelis,
+ESCOX: A tool for skill and occupation extraction using LLMs from unstructured text,
+Software Impacts,
+2025,
+100772,
+ISSN 2665-9638,
+https://doi.org/10.1016/j.simpa.2025.100772.
+(https://www.sciencedirect.com/science/article/pii/S2665963825000326)
+Abstract: ESCOX, also known as ESCOSkillExtractor, is an open-source, non-proprietary tool for identifying and classifying skills, skillsets, and occupations from job postings and general text. It utilizes the European Skills, Competences, Qualifications and Occupations (ESCO) taxonomy to structure extraction, addressing the need for taxonomy-aligned skill identification in unstructured labor market data. Developed within the SKILLAB EU Horizon project, ESCOX combines LLMs and text embeddings to map content to standardized categories. It offers a user-friendly graphical interface for researchers, educators, and HR professionals, supporting skills gap analysis, training, recruitment, and policy planning, and contributing to the development of a skills-based economy.
+Keywords: Skill & occupation extraction; ESCO; Large language model; Job vacancies
+```
