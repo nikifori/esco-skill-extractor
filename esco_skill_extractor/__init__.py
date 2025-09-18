@@ -196,18 +196,33 @@ class SkillExtractor:
             ]
 
             # Filter the entities based on the threshold
-            most_similar_entity_indices_text = (
-                most_similar_entity_indices_text[
-                    torch.nonzero(most_similar_entity_scores_text > threshold)
-                ]
+            condition = most_similar_entity_scores_text > threshold
+            most_similar_entity_indices_text_temp = (
+                most_similar_entity_indices_text[torch.nonzero(condition)]
                 .squeeze(dim=-1)
                 .unique()
-                .tolist()
-            )
+                .tolist())
 
-            # Create a list of dictionaries containing the entities for the current text
+            # if no similarity is greter than the threshold, return the top 1 similar independently of the threshold. Return also the respective threshold.
+            if len(most_similar_entity_indices_text_temp) == 0:
+                most_similar_entity_indices_text = (
+                    most_similar_entity_indices_text[torch.argmax(
+                        most_similar_entity_scores_text)].squeeze(
+                            dim=-1).unique().tolist())
+
+                most_similar_entity_thresholds_text = (
+                    most_similar_entity_scores_text[torch.argmax(
+                        most_similar_entity_scores_text)].squeeze(
+                            dim=-1).unique().tolist())
+
+            else:
+                most_similar_entity_indices_text = most_similar_entity_indices_text_temp
+                most_similar_entity_thresholds_text = (
+                    most_similar_entity_scores_text[torch.nonzero(condition)].squeeze(
+                            dim=-1).unique().tolist())
+
             entity_ids_per_text.append(
-                np.take(entity_ids, most_similar_entity_indices_text).tolist()
+                [(x, y) for x, y in zip(np.take(entity_ids, most_similar_entity_indices_text).tolist(), most_similar_entity_thresholds_text)]
             )
 
             sentences += sentences_in_text
@@ -223,7 +238,8 @@ class SkillExtractor:
 
         if os.path.exists(f"{SkillExtractor._dir}/data/skill_embeddings.bin"):
             os.remove(f"{SkillExtractor._dir}/data/skill_embeddings.bin")
-        if os.path.exists(f"{SkillExtractor._dir}/data/occupation_embeddings.bin"):
+        if os.path.exists(
+                f"{SkillExtractor._dir}/data/occupation_embeddings.bin"):
             os.remove(f"{SkillExtractor._dir}/data/occupation_embeddings.bin")
 
     def get_skills(self, texts: List[str]) -> List[List[str]]:
